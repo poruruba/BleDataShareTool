@@ -317,9 +317,6 @@ var vue_options = {
         },
         onDeviceReady: async function() {
             this.request_permissions();
-            blePeripheral.onWriteRequest(this.didReceiveWriteRequest);
-
-            this.createService();
         },
         createService: function() {
             // https://learn.adafruit.com/introducing-the-adafruit-bluefruit-le-uart-friend/uart-service
