@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="jp.or.myhome.sample.BleDataShareClient" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>BleDataShareClient</name>
+    <description>Sample Apache Cordova App</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Apache Cordova Team
+    </author>
+    
+    <content src="index.html" />
+
+<!--
+    <allow-navigation href="https://【リモート配備ホスト】/cordova_base/*" />
+-->
+    <platform name="android">
+      <config-file target="AndroidManifest.xml" parent="/manifest">
+          <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+          <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+          <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+      </config-file>
+      <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+      <icon density="ldpi" src="res/icon/android/36x36.png" />
+      <icon density="mdpi" src="res/icon/android/48x48.png" />
+      <icon density="hdpi" src="res/icon/android/72x72.png" />
+      <icon density="xhdpi" src="res/icon/android/96x96.png" />
+      <icon density="xxhdpi" src="res/icon/android/144x144.png" />
+      <icon density="xxxhdpi" src="res/icon/android/192x192.png" />
+<!--
+      <content src="https://【リモート配備ホスト】/cordova_base/bledatashareclient/android/index.html" />
+-->
+    </platform>
+    <platform name="ios">
+      <icon height="180" src="res/icon/ios/180x180.png" width="180" />
+      <icon height="60" src="res/icon/ios/60x60.png" width="60" />
+      <icon height="20" src="res/icon/ios/20x20.png" width="20" />
+      <icon height="120" src="res/icon/ios/120x120.png" width="120" />
+      <icon height="76" src="res/icon/ios/76x76.png" width="76" />
+      <icon height="152" src="res/icon/ios/152x152.png" width="152" />
+      <icon height="40" src="res/icon/ios/40x40.png" width="40" />
+      <icon height="80" src="res/icon/ios/80x80.png" width="80" />
+
+      <icon height="80" src="res/icon/ios/57x57.png" width="57" />
+      <icon height="80" src="res/icon/ios/114x114.png" width="114" />
+      <icon height="80" src="res/icon/ios/72x72.png" width="72" />
+      <icon height="80" src="res/icon/ios/144x144.png" width="144" />
+      <icon height="167" src="res/icon/ios/167x167.png" width="167" />
+<!--
+      <content src="https://【リモート配備ホスト】/cordova_base/bledatashareclient/ios/index.html" />
+-->
+    </platform>
+
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+</widget>

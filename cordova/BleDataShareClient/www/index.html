@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src * 'unsafe-inline'; media-src *; img-src * data: content: blob:;">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="css/start.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spinkit/2.0.1/spinkit.min.css" />
+  <script src="js/methods_bootstrap.js"></script>
+  <script src="js/components_bootstrap.js"></script>
+  <script src="js/components_utils.js"></script>
+  <script src="js/vue_utils.js"></script>
+  <script src="js/gql_utils.js"></script>
+
+  <script src="js/remoteconsole.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vconsole/dist/vconsole.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
+
+  <title>DataShareTool</title>
+</head>
+<body>
+<!--
+    <div id="loader-background">
+      <div class="sk-plane sk-center"></div>
+    </div>
+-->
+    <div id="top" class="container">
+      <div class="jumbotron">
+        <h2>DataShareTool</h2>
+      </div>
+
+<!--
+        <button class="btn btn-default btn-sm" v-on:click="reload">reload</button>
+        <br><br>
+-->
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            送信
+          </div>
+          <div class="panel-body">
+            <div class="form-inline">
+              <label>type</label> <select class="form-control" v-model="type_select">
+                <option value="TEXT">TEXT</option>
+                <option value="BINARY">BINARY</option>
+                <option value="FILE">FILE</option>
+              </select>
+            </div>
+            <span v-if="type_select=='TEXT'">
+              <textarea type="text" rows="1" class="form-control" v-model="ble_read_text"></textarea>
+              <button class="btn btn-default" v-on:click="do_ble_read_text">セット</button>
+            </span>
+            <span v-if="type_select=='BINARY'">
+              <textarea type="text" rows="5" class="form-control" v-model="ble_read_binary"></textarea>
+              <button class="btn btn-default" v-on:click="do_ble_read_binary">セット</button>
+            </span>
+            <span v-if="type_select=='FILE'">
+              <comp_file id="test" v-bind:callback="file_callback"></comp_file>
+              <button class="btn btn-default" v-on:click="do_ble_read_file">セット</button>
+              <br>
+              <label>mime-type</label> {{file_mimetype}}<br>
+              <label>name</label> {{file_name}}<br>
+              <label>size</label> {{file_size}}<br>
+            </span>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            受信
+          </div>
+          <div class="panel-body">
+            <label>type</label> {{read_type_str}}
+            <div>
+              <span v-if="read_type==TYPE.EMPTY">
+                受信していません。
+              </span>
+              <span v-if="read_type==TYPE.TEXT">
+                <button class="btn btn-default btn-sm" v-on:click="clipboard_copy(read_text)">Copy</button>
+                <textarea type="text" rows="5" class="form-control" v-model="read_text"></textarea>
+                <label>received date</label> {{toLocaleString(read_received_date)}}<br>
+              </span>
+              <span v-if="read_type==TYPE.BINARY">
+                <button class="btn btn-default btn-sm" v-on:click="clipboard_copy(read_binary)">Copy</button>
+                <textarea type="text" rows="5" class="form-control" v-model="read_binary"></textarea>
+                <label>received date</label> {{toLocaleString(read_received_date)}}<br>
+                <button class="btn btn-default" v-on:click="do_binary_save">Save</button>
+              </span>
+              <span v-if="read_type==TYPE.FILE">
+                <label>mime-type</label> {{read_file.file_mimetype}}<br>
+                <label>name</label> {{read_file.file_name}}<br>
+                <label>size</label> {{read_file.file_size}}<br>
+                <label>received date</label> {{toLocaleString(read_received_date)}}<br>
+                <button class="btn btn-default" v-on:click="do_file_save">Save</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- for progress-dialog -->
+        <progress-dialog v-bind:title="progress_title"></progress-dialog>
+    </div>
+
+    <script src="js/start.js"></script>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+</body>
