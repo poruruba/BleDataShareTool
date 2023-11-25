@@ -27,6 +27,7 @@ var OPERATION = {
 
 // type(1)=FILE | length_of_binary(4)=b | binary(b) | length_of_name(2)=n | name(n) | length_of_mimetype(1)=m | mimetype(m)
 // type(1)=TEXT | text(n)
+// type(1)=BINARY | binary(n)
 // type(1)=EMPTY
 
 var read_data_array = make_data_array([TYPE.EMPTY]);
@@ -66,7 +67,6 @@ var vue_options = {
         file_mimetype: "",
         file_name: "",
         file_size: 0,
-
 
         type_select: "TEXT",
         ble_read_text: "",
@@ -292,25 +292,44 @@ var vue_options = {
                 }, (error) =>{
                     console.error("The following error occurred: "+error);
                 });
-            }
-            var permissions = ["BLUETOOTH_ADVERTISE", "BLUETOOTH_CONNECT"];
-            cordova.plugins.diagnostic.getBluetoothAuthorizationStatuses((statuses) =>{
-                console.log(statuses);
-                if( statuses[permissions[0]] != "GRANTED" || statuses[permissions[1] != "GRANTED"] ){
-                    cordova.plugins.diagnostic.requestBluetoothAuthorization(() =>{
-                        console.log("Bluetooth authorization was requested.");
+                cordova.plugins.diagnostic.getBluetoothAuthorizationStatuses((statuses) =>{
+                    console.log(statuses);
+                        if( statuses["BLUETOOTH_ADVERTISE"] != "GRANTED" || statuses["BLUETOOTH_CONNECT"] != "GRANTED"] ){
+                        cordova.plugins.diagnostic.requestBluetoothAuthorization(() =>{
+                            console.log("Bluetooth is now authorized.");
+                            blePeripheral.onWriteRequest(this.didReceiveWriteRequest);
+                            this.createService();
+                        }, (error) =>{
+                            console.error(error);
+                        });
+                    }else{
+                        console.log("Bluetooth was already authorized.");
                         blePeripheral.onWriteRequest(this.didReceiveWriteRequest);
                         this.createService();
-                    }, (error) =>{
-                        console.error(error);
-                    }, permissions);
-                }else{
-                    blePeripheral.onWriteRequest(this.didReceiveWriteRequest);
-                    this.createService();
-                }
-            }, (error) =>{
-                console.error(error);
-            });
+                    }
+                }, (error) =>{
+                    console.error(error);
+                });
+            }else if( device.platform == 'iOS' ){
+                cordova.plugins.diagnostic.getBluetoothAuthorizationStatus((status) =>{
+                    console.log(status);
+                    if( status != "authorized" ){
+                        cordova.plugins.diagnostic.requestBluetoothAuthorization(() =>{
+                            console.log("Bluetooth is now authorized.");
+                            blePeripheral.onWriteRequest(this.didReceiveWriteRequest);
+                            this.createService();
+                        }, (error) =>{
+                            console.error(error);
+                        });
+                    }else{
+                        console.log("Bluetooth was already authorized.");
+                        blePeripheral.onWriteRequest(this.didReceiveWriteRequest);
+                        this.createService();
+                    }
+                }, (error) =>{
+                    console.error(error);
+                });
+            }
         },
         reload: async function(){
             location.reload();
