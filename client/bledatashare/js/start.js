@@ -232,7 +232,6 @@ var vue_options = {
                 else
                     return this.writeChar(UUID_ANDROID_WRITE, whole);
             }catch(error){
-                this.progress_close();
                 console.error(error);
                 alert(error);
             }finally{
