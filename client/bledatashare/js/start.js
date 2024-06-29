@@ -235,6 +235,8 @@ var vue_options = {
                 this.progress_close();
                 console.error(error);
                 alert(error);
+            }finally{
+                this.progress_close();
             }
         },
         
